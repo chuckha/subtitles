@@ -16,3 +16,5 @@ subex file1.srt file2.srt file3.srt
 # file2.txt
 # file3.txt
 ```
+
+## TODO: deploy for all OSes

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/chuckha/subtitles/discovery"
 	"github.com/chuckha/subtitles/extractors"
@@ -21,7 +23,17 @@ func run() int {
 			fmt.Println(err)
 			return 1
 		}
-		fmt.Println(convert(contents))
+		ext := filepath.Ext(file)
+		newFilename := strings.TrimSuffix(file, ext) + ".txt"
+		output, err := convert(contents)
+		if err != nil {
+			fmt.Println(err)
+			return 1
+		}
+		if err := ioutil.WriteFile(newFilename, []byte(output), 0644); err != nil {
+			fmt.Println(err)
+			return 1
+		}
 	}
 	return 0
 }
