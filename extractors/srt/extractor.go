@@ -38,7 +38,7 @@ func (s *subtitle) String() string {
 // 0 == subtitles + newline found, starting over
 // 1 == number found, expecting duration next
 // 2 == duration found, expecting subtitles next
-func (e *Extractor) Extract(input io.Reader) string {
+func (e *Extractor) Extract(input io.Reader) (string, error) {
 	subs := make(subtitles, 0)
 	scanner := bufio.NewScanner(input)
 	state := 0
@@ -49,11 +49,13 @@ func (e *Extractor) Extract(input io.Reader) string {
 		line := scanner.Bytes()
 		switch state {
 		case 0:
-			// expect a number
+			// expect an infinite number of blank lines or a number
+			if len(bytes.TrimSpace(line)) == 0 {
+				continue
+			}
 			num, err := readNumber(bytes.TrimSpace(line))
 			if err != nil {
-				fmt.Println("Unexpected error on line", lineno)
-				return ""
+				return "", fmt.Errorf("error reading number on line: %v", lineno)
 			}
 			sub.number = num
 			state = 1
@@ -61,9 +63,8 @@ func (e *Extractor) Extract(input io.Reader) string {
 			// read duration
 			from, to, err := readDuration(bytes.TrimSpace(line))
 			if err != nil {
-				fmt.Println("Unexpected error on line", lineno)
 				fmt.Println("line: ", string(line))
-				return ""
+				return "", fmt.Errorf("error reading duration on line: %v", lineno)
 			}
 			sub.from = from
 			sub.to = to
@@ -89,7 +90,7 @@ func (e *Extractor) Extract(input io.Reader) string {
 			sub.contents = append(sub.contents, item)
 		}
 	}
-	return subs.String()
+	return subs.String(), nil
 }
 
 func readNumber(b []byte) (int, error) {

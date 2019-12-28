@@ -9,7 +9,7 @@ import (
 )
 
 type Extractor interface {
-	Extract(io.Reader) string
+	Extract(io.Reader) (string, error)
 }
 
 func ExtracatorFactory(format string) (Extractor, error) {
