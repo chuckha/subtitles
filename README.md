@@ -8,6 +8,8 @@ A CLI to get plain text out of subtitles
 
 ## Usage
 
+Use the binaries found on the release page. Look for the [latest release](https://github.com/chuckha/subtitles/releases/latest)!
+
 ```
 subex file1.srt file2.srt file3.srt
 
@@ -17,4 +19,4 @@ subex file1.srt file2.srt file3.srt
 # file3.txt
 ```
 
-## TODO: deploy for all OSes
+
