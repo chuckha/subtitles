@@ -8,6 +8,7 @@ builds:
   - windows
   - linux
   - darwin
+  binary: subex
 archives:
 - replacements:
     darwin: Darwin
