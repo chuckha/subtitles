@@ -10,6 +10,7 @@ import (
 
 	"github.com/chuckha/subtitles/discovery"
 	"github.com/chuckha/subtitles/extractors"
+	"github.com/chuckha/subtitles/types"
 )
 
 func main() {
@@ -26,7 +27,8 @@ func run() int {
 		}
 		ext := filepath.Ext(file)
 		newFilename := strings.TrimSuffix(file, ext) + ".txt"
-		output, err := convert(contents)
+		subtitles, err := convert(contents)
+		output := subtitles.String()
 		if err != nil {
 			fmt.Println(file)
 			fmt.Println(err)
@@ -41,12 +43,13 @@ func run() int {
 	return 0
 }
 
-func convert(contents []byte) (string, error) {
-	disc := &discovery.SRTDiscoverer{}
+func convert(contents []byte) (types.Subtitles, error) {
+	disc := &discovery.Discoverer{}
 	format := disc.Discover(contents)
+	fmt.Println("Found subtitle type: ", format)
 	extractor, err := extractors.ExtracatorFactory(format)
 	if err != nil {
-		return "", err
+		return types.Subtitles{}, err
 	}
 	return extractor.Extract(bytes.NewReader(contents))
 }

@@ -1,11 +1,17 @@
 package discovery
 
+import "bytes"
+
 const (
 	Srt = "SRT"
+	Ass = "ASS"
 )
 
-type SRTDiscoverer struct{}
+type Discoverer struct{}
 
-func (d *SRTDiscoverer) Discover(input []byte) string {
+func (d *Discoverer) Discover(input []byte) string {
+	if bytes.Contains(input, []byte("aegisub.org")) {
+		return Ass
+	}
 	return Srt
 }
