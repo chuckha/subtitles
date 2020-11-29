@@ -20,4 +20,10 @@ subex file1.srt file2.ass file3.ass
 # file3.txt
 ```
 
+# Release
 
+Run goreleaser with a valid environment.
+
+```
+GITHUB_TOKEN=<github token> goreleaser --rm-dist
+```
